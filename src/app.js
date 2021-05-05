@@ -35,16 +35,29 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 scene.background = new THREE.Color( 0xffffff )
 
+
+const loadingBarElement = document.querySelector('.loading-bar')
+const loadingBarText = document.querySelector('.loading-bar-text')
 const textureLoader = new THREE.TextureLoader()
 const loadingManager = new THREE.LoadingManager(
   // Loaded
   () =>{
-    gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0 })
+    window.setTimeout(() =>{
+      gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0, delay: 1 })
+
+      loadingBarElement.classList.add('ended')
+      loadingBarElement.style.transform = ''
+
+      loadingBarText.classList.add('fade-out')
+
+    }, 500)
   },
 
   // Progress
-  () =>{
-    console.log('progress')
+  (itemUrl, itemsLoaded, itemsTotal) =>{
+    const progressRatio = itemsLoaded / itemsTotal
+    loadingBarElement.style.transform = `scaleX(${progressRatio})`
+
   }
 )
 
@@ -473,7 +486,7 @@ const tick = () =>{
   groundMaterial.uniforms.uTime.value = elapsedTime
 
   if(shipGroup){
-    console.log(vehicle)
+    //console.log(vehicle)
     shipGroup.position.copy(vehicle.chassisBody.position)
     shipGroup.quaternion.copy(vehicle.chassisBody.quaternion)
   }
