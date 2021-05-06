@@ -378,7 +378,7 @@ void main() {
 
   color += stroke(cnoise(rote * 4. * cheapNoise(vec3(roteC, 2.), .9)), .5, ((sin(vTime) +1.) /2.)+.1);
 
- gl_FragColor = vec4(color, alpha);
+ gl_FragColor = vec4(color, .8);
 
 
 

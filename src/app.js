@@ -201,102 +201,139 @@ const world = new CANNON.World({
   gravity: new CANNON.Vec3(0, -9.82, 0) // m/s²
 })
 
-
-
+let boxesC = []
+let boxes3 = []
+function createCube(z){
 
 const groundMaterialCannon = new CANNON.Material('ground')
 
 // Create a static plane for the ground
 const groundBody = new CANNON.Body({
   mass: 0, // can also be achieved by setting the mass to 0
-  shape: new CANNON.Box(new CANNON.Vec3(50, 25, 5)),
+  shape: new CANNON.Box(new CANNON.Vec3(10, 10, 5)),
   material: groundMaterialCannon
 })
 groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0)
+groundBody.position.x = -z
 groundBody.position.y = -9.5
 world.addBody(groundBody)
-
-
-
-
-const groundGeometry = new THREE.BoxGeometry(100,50,10)
+boxesC.push(groundBody)
+const groundGeometry = new THREE.BoxGeometry(20,20,10)
 const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial)
 
 groundMesh.rotation.x = - Math.PI / 2
+groundMesh.position.x = -z
 groundMesh.position.y = -9.5
 scene.add(groundMesh)
 
+boxes3.push(groundMesh)
+}
+
+for(let i = 0; i < 10; i++){
+  createCube(i*20)
+}
 
 
-const chassisShape = new CANNON.Box(new CANNON.Vec3(5, 0.5, 2))
-const chassisBody = new CANNON.Body({ mass: 5 })
+
+
+
+const chassisShape = new CANNON.Box(new CANNON.Vec3(5, 0.25, 1.25))
+const chassisBody = new CANNON.Body({ mass: 2 })
 const centerOfMassAdjust = new CANNON.Vec3(0, -1, 0)
 chassisBody.addShape(chassisShape, centerOfMassAdjust)
+world.addBody(chassisBody)
 
+// // Create the vehicle
+// const vehicle = new CANNON.RigidVehicle({
+//   chassisBody
+// })
+//
+// const mass = 4
+// const axisWidth = 2.
+// const radiusTop = .4
+// const radiusBottom = .4
+// const height = .4
+// const numSegments = 96
+// //const wheelShape = new CANNON.Cylinder(radiusTop, radiusBottom, height, numSegments)
+// const wheelShape = new CANNON.Sphere(1)
+// console.log(wheelShape.faces)
+// var q = new CANNON.Quaternion();
+// q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
+// console.log(wheelShape)
+//
+// const wheelMaterial = new CANNON.Material('wheel')
+// const down = new CANNON.Vec3(0, -1, 0)
+//
+// const wheelBody1 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody1.addShape(wheelShape,new CANNON.Vec3(), q)
+// vehicle.addWheel({
+//   body: wheelBody1,
+//   position: new CANNON.Vec3(-5, 0, axisWidth / 2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, 1),
+//   direction: down
+// })
+//
+// const wheelBody2 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody2.addShape(wheelShape,new CANNON.Vec3(), q)
+// vehicle.addWheel({
+//   body: wheelBody2,
+//   position: new CANNON.Vec3(-5, 0, -axisWidth / 2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, -1),
+//   direction: down
+// })
+//
+// const wheelBody3 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody3.addShape(wheelShape,new CANNON.Vec3(), q)
+// vehicle.addWheel({
+//   body: wheelBody3,
+//   position: new CANNON.Vec3(5, 0,axisWidth * 1.2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, 1),
+//   direction: down
+// })
+//
+// const wheelBody4 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody4.addShape(wheelShape,new CANNON.Vec3(), q)
+// vehicle.addWheel({
+//   body: wheelBody4,
+//   position: new CANNON.Vec3(5, 0, -axisWidth * 1.2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, -1),
+//   direction: down
+// })
 
-// Create the vehicle
-const vehicle = new CANNON.RigidVehicle({
-  chassisBody
-})
+// const wheelBody5 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody5.addShape(wheelShape)
+// vehicle.addWheel({
+//   body: wheelBody5,
+//   position: new CANNON.Vec3(1.5, 0, axisWidth * 1.2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, 1),
+//   direction: down
+// })
+//
+// const wheelBody6 = new CANNON.Body({ mass, material: wheelMaterial })
+// wheelBody6.addShape(wheelShape)
+// vehicle.addWheel({
+//   body: wheelBody6,
+//   position: new CANNON.Vec3(1.5, 0, -axisWidth * 1.2).vadd(centerOfMassAdjust),
+//   axis: new CANNON.Vec3(0, 0, -1),
+//   direction: down
+// })
 
-const mass = 5
-const axisWidth = 7
-const wheelShape = new CANNON.Sphere(1.5)
-const wheelMaterial = new CANNON.Material('wheel')
-const down = new CANNON.Vec3(0, -1, 0)
-
-const wheelBody1 = new CANNON.Body({ mass, material: wheelMaterial })
-wheelBody1.addShape(wheelShape)
-vehicle.addWheel({
-  body: wheelBody1,
-  position: new CANNON.Vec3(-5, 0, axisWidth / 2).vadd(centerOfMassAdjust),
-  axis: new CANNON.Vec3(0, 0, 1),
-  direction: down
-})
-
-const wheelBody2 = new CANNON.Body({ mass, material: wheelMaterial })
-wheelBody2.addShape(wheelShape)
-vehicle.addWheel({
-  body: wheelBody2,
-  position: new CANNON.Vec3(-5, 0, -axisWidth / 2).vadd(centerOfMassAdjust),
-  axis: new CANNON.Vec3(0, 0, -1),
-  direction: down
-})
-
-const wheelBody3 = new CANNON.Body({ mass, material: wheelMaterial })
-wheelBody3.addShape(wheelShape)
-vehicle.addWheel({
-  body: wheelBody3,
-  position: new CANNON.Vec3(5, 0, axisWidth / 2).vadd(centerOfMassAdjust),
-  axis: new CANNON.Vec3(0, 0, 1),
-  direction: down
-})
-
-const wheelBody4 = new CANNON.Body({ mass, material: wheelMaterial })
-wheelBody4.addShape(wheelShape)
-vehicle.addWheel({
-  body: wheelBody4,
-  position: new CANNON.Vec3(5, 0, -axisWidth / 2).vadd(centerOfMassAdjust),
-  axis: new CANNON.Vec3(0, 0, -1),
-  direction: down
-})
-
-vehicle.wheelBodies.forEach((wheelBody) => {
-  // Some damping to not spin wheels too fast
-  wheelBody.angularDamping = 0.4
-
-
-})
-
-const wheel_ground = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
-  friction: 0.3,
-  restitution: 0,
-  contactEquationStiffness: 1000
-})
-world.addContactMaterial(wheel_ground)
+// vehicle.wheelBodies.forEach((wheelBody) => {
+//   // Some damping to not spin wheels too fast
+//   wheelBody.angularDamping = 0.4
+//
+//
+// })
+//
+// const wheel_ground = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
+//   friction: 0.3,
+//   restitution: 0,
+//   contactEquationStiffness: 1000
+// })
+// world.addContactMaterial(wheel_ground)
 
 // vehicle.chassisBody.position. = 5
-vehicle.addToWorld(world)
+// vehicle.addToWorld(world)
 
 const sizes = {
   width: window.innerWidth,
@@ -372,37 +409,52 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 
 
- const timeStep = 1 / 60 // seconds
- let lastCallTime
 
- document.addEventListener('keydown', (event) => { event.preventDefault();
-const maxSteerVal = Math.PI / 8
-const maxSpeed = 10
-const maxForce = 100
+const timeStep = 1 / 60 // seconds
+let lastCallTime
 
+document.addEventListener('keydown', (event) => {
+  event.preventDefault()
+// var direction = new THREE.Vector3( 0, 0, -1 ).applyQuaternion( shipGroup.quaternion )
+// var cameraDirection = camera.getWorldDirection();
+// var cameraForward = new THREE.Vector3(cameraDirection.x, 0, cameraDirection.z).multiplyScalar(speed * dir.ud);
+// cube.position.x += cameraForward.x;
+// cube.position.z += cameraForward.z;
+
+
+
+  // console.log(direction)
   switch (event.key) {
     case 'w':
     case 'ArrowUp':
-    vehicle.setWheelForce(maxForce, 2)
-    vehicle.setWheelForce(-maxForce, 3)
+      console.log(chassisBody)
+      //chassisBody.velocity.vmult(shipGroup.position)
+      // chassisBody.velocity.y += chassisBody.quaternion.y * 100
+
+      //chassisBody.rotation.x -= 0.05;
+			chassisBody.velocity.x -= Math.cos(chassisBody.quaternion.y) * 5.25;
+			chassisBody.velocity.z -= Math.sin(chassisBody.quaternion.y) * 5.25;
+      // chassisBody.velocity.z += chassisBody.quaternion.z * 100
+        chassisBody.applyForce(camera.getWorldDirection(shipGroup.position))
     break
 
   case 's':
   case 'ArrowDown':
-    vehicle.setWheelForce(-maxForce / 2, 2)
-    vehicle.setWheelForce(maxForce / 2, 3)
+      chassisBody.velocity.x +=10
     break
 
   case 'a':
   case 'ArrowLeft':
-    vehicle.setSteeringValue(maxSteerVal, 0)
-    vehicle.setSteeringValue(maxSteerVal, 1)
+      chassisBody.angularVelocity.y += .1
     break
 
   case 'd':
   case 'ArrowRight':
-    vehicle.setSteeringValue(-maxSteerVal, 0)
-    vehicle.setSteeringValue(-maxSteerVal, 1)
+        chassisBody.angularVelocity.y -= .1
+    break
+
+  case ' ':
+    chassisBody.velocity.y +=20
     break
 }
  })
@@ -412,26 +464,26 @@ const maxForce = 100
    switch (event.key) {
      case 'w':
      case 'ArrowUp':
-       vehicle.setWheelForce(0, 2)
-       vehicle.setWheelForce(0, 3)
+       // vehicle.setWheelForce(0, 2)
+       // vehicle.setWheelForce(0, 3)
        break
 
      case 's':
      case 'ArrowDown':
-       vehicle.setWheelForce(0, 2)
-       vehicle.setWheelForce(0, 3)
+       // vehicle.setWheelForce(0, 2)
+       // vehicle.setWheelForce(0, 3)
        break
 
      case 'a':
      case 'ArrowLeft':
-       vehicle.setSteeringValue(0, 0)
-       vehicle.setSteeringValue(0, 1)
+       // vehicle.setSteeringValue(0, 0)
+       // vehicle.setSteeringValue(0, 1)
        break
 
      case 'd':
      case 'ArrowRight':
-       vehicle.setSteeringValue(0, 0)
-       vehicle.setSteeringValue(0, 1)
+       // vehicle.setSteeringValue(0, 0)
+       // vehicle.setSteeringValue(0, 1)
        break
    }
          })
@@ -447,6 +499,18 @@ const tick = () =>{
   // if ( mixer ) mixer.update( clock.getDelta() )
   const elapsedTime = clock.getElapsedTime()
 
+  boxes3.map((x, index) =>{
+    if(index %2 === 0){
+      x.position.z += Math.sin(elapsedTime)  * index/10
+      x.position.y += Math.sin(elapsedTime)  * index/10
+    }
+    if(index %2 !== 0){
+      x.position.z += Math.cos(elapsedTime)  * index/10
+    }
+    boxesC[index].position.copy(x.position)
+
+  })
+
 
   lightsMaterial.uniforms.uTime.value = elapsedTime
   thrustersMaterial.uniforms.uTime.value = elapsedTime
@@ -455,8 +519,8 @@ const tick = () =>{
 
   if(shipGroup){
     //console.log(vehicle)
-    shipGroup.position.copy(vehicle.chassisBody.position)
-    shipGroup.quaternion.copy(vehicle.chassisBody.quaternion)
+    shipGroup.position.copy(chassisBody.position)
+    shipGroup.quaternion.copy(chassisBody.quaternion)
   }
 
   const time = performance.now() / 1000 // seconds
@@ -474,11 +538,11 @@ const tick = () =>{
   controls.update()
 
   if(shipGroup){
-  camera.lookAt(shipGroup.position)
-  controls.target = shipGroup.position
+    camera.lookAt(shipGroup.position)
+    controls.target = shipGroup.position
 
 
-}
+  }
 
 
 

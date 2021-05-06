@@ -5227,6 +5227,11 @@ terser@^5.5.1:
     source-map "~0.7.2"
     source-map-support "~0.5.19"
 
+three-to-cannon@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/three-to-cannon/-/three-to-cannon-3.1.0.tgz#89ae51ebe94255e5499606c9b086b925a4aa46cf"
+  integrity sha512-afIvLiI4svuxubPFzEDc/Wc23SEeHy0LqdE4PQiVFwyzqCHrl3em8hwYY7Mi24ceiIMdM2/+zlZzyAJZDwMT9w==
+
 three@^0.126.0:
   version "0.126.1"
   resolved "https://registry.yarnpkg.com/three/-/three-0.126.1.tgz#cf4e4e52060fd952f6f0d5440cbd422c66bc4be7"
